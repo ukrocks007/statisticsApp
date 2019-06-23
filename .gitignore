@@ -60,5 +60,5 @@ typings/
 # next.js build output
 .next
 
-SystemB/lib/py/
+SystemB/lib/py/build/
 SystemA/Client/build/*
