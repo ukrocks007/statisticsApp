@@ -1,0 +1,15 @@
+FROM thrift:latest
+
+WORKDIR /usr/src/app
+
+# Update
+RUN apt-get update && apt install python-pip -y
+
+# Install app dependencies
+RUN pip install numpy
+
+# Bundle app source
+COPY . .
+
+EXPOSE 9090
+CMD ["python", "PythonServer.py"]
