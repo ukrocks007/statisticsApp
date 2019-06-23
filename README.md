@@ -5,7 +5,9 @@ A simple statistics demo using React, node, python &amp; Apache thrift
 
 ### Setup thrift
 
-As SystemB is using Paython it need platform specific libraries of thrift
+As SystemB is using Python it need platform specific libraries of thrift
+
+[Apache thrift build](https://thrift.apache.org/tutorial/)
 
 You have to build thrift on the platform you are using and copy the contents of lib/py/build/ folder to SystemB/lib/py/build
 
