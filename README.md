@@ -1,6 +1,10 @@
 # statisticsApp
 A simple statistics demo using React, node, python &amp; Apache thrift
 
+## Demo
+
+[![Demo](https://i.ibb.co/xYSccp2/Screenshot-2019-06-23-at-3-47-44-PM.png)](https://player.vimeo.com/video/343915055)
+
 ## How to run
 
 ### Setup thrift
