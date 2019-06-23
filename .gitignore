@@ -61,5 +61,4 @@ typings/
 .next
 
 SystemB/lib/py/
-
-*.pyc
+SystemA/Client/build/*

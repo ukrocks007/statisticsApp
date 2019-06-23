@@ -1,0 +1,40 @@
+.container {
+    padding: 5%;
+    height: 100%;
+    width: 100%;
+}
+
+.division {
+    padding: 5%;
+    height: 100%;
+    width: 100%;
+}
+
+.input-div {
+    align-items: flex-start;
+}
+
+.input-label {
+    display: inline-block;
+    margin: 10px;
+}
+
+.input-bar {
+    display: inline-block;
+    margin: 10px;
+    width: 80%;
+}
+
+.button-bar {
+    align-items: flex-start;
+}
+
+.message {
+    display: inline-block;
+    margin: 10px;
+}
+
+.buttons {
+    display: inline-block;
+    margin-left: 29%;
+}
