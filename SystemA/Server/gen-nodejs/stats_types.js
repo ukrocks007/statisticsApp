@@ -11,3 +11,98 @@ var Q = thrift.Q;
 
 
 var ttypes = module.exports = {};
+var StatsStruct = module.exports.StatsStruct = function(args) {
+  this.mean = null;
+  this.median = null;
+  this.variance = null;
+  this.std_dev = null;
+  if (args) {
+    if (args.mean !== undefined && args.mean !== null) {
+      this.mean = args.mean;
+    }
+    if (args.median !== undefined && args.median !== null) {
+      this.median = args.median;
+    }
+    if (args.variance !== undefined && args.variance !== null) {
+      this.variance = args.variance;
+    }
+    if (args.std_dev !== undefined && args.std_dev !== null) {
+      this.std_dev = args.std_dev;
+    }
+  }
+};
+StatsStruct.prototype = {};
+StatsStruct.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true) {
+    var ret = input.readFieldBegin();
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid) {
+      case 1:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.mean = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I32) {
+        this.median = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.variance = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.DOUBLE) {
+        this.std_dev = input.readDouble();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+StatsStruct.prototype.write = function(output) {
+  output.writeStructBegin('StatsStruct');
+  if (this.mean !== null && this.mean !== undefined) {
+    output.writeFieldBegin('mean', Thrift.Type.DOUBLE, 1);
+    output.writeDouble(this.mean);
+    output.writeFieldEnd();
+  }
+  if (this.median !== null && this.median !== undefined) {
+    output.writeFieldBegin('median', Thrift.Type.I32, 2);
+    output.writeI32(this.median);
+    output.writeFieldEnd();
+  }
+  if (this.variance !== null && this.variance !== undefined) {
+    output.writeFieldBegin('variance', Thrift.Type.DOUBLE, 3);
+    output.writeDouble(this.variance);
+    output.writeFieldEnd();
+  }
+  if (this.std_dev !== null && this.std_dev !== undefined) {
+    output.writeFieldBegin('std_dev', Thrift.Type.DOUBLE, 4);
+    output.writeDouble(this.std_dev);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

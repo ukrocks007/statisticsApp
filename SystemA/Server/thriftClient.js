@@ -18,9 +18,9 @@ connection.on('error', function (err) {
 var client = thrift.createClient(Calculator, connection);
 
 
-const ping = () => client.ping(function (err, response) {
-    console.log('ping()');
-});
+const ping = () => async () => {
+    return (await client.ping());
+}
 
 
 const genRand = async () => {

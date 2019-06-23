@@ -24,9 +24,9 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('  void ping()')
+    print('  bool ping()')
     print('   genRand()')
-    print('   calculateStats( numbers)')
+    print('  StatsStruct calculateStats( numbers)')
     print('')
     sys.exit(0)
 

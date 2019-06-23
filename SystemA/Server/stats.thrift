@@ -1,9 +1,16 @@
+struct StatsStruct {
+  1: double mean
+  2: i32 median
+  3: double variance
+  4: double std_dev
+}
+
 service Calculator {
 
-   void ping(),
+   bool ping(),
 
    list<i32> genRand(),
 
-   list<double> calculateStats(1:list<i32> numbers)
+   StatsStruct calculateStats(1:list<i32> numbers)
 
 }

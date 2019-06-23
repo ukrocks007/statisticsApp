@@ -4,6 +4,7 @@ import numpy
 sys.path.append('gen-py')
 sys.path.insert(0, glob.glob('./lib/py/build/lib*')[0])
 from stats import Calculator
+from stats.ttypes import StatsStruct
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
@@ -16,7 +17,7 @@ class CalculatorHandler:
 
     def ping(self):
         print('ping()')
-        return 'pong'
+        return True
 
     def genRand(self):
         print('genRand()')
@@ -27,8 +28,12 @@ class CalculatorHandler:
 
     def calculateStats(self, numbers):
         print('calculateStats()')
-        arr = [numpy.mean(numbers), numpy.median(numbers), numpy.var(numbers), numpy.std(numbers)]
-        return arr
+        ans = StatsStruct()
+        ans.mean = numpy.mean(numbers)
+        ans.median = numpy.median(numbers)
+        ans.variance = numpy.var(numbers)
+        ans.std_dev = numpy.std(numbers)
+        return ans
 
 
 if __name__ == '__main__':

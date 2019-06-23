@@ -43,7 +43,7 @@ class Client(Iface):
 
     def ping(self):
         self.send_ping()
-        self.recv_ping()
+        return self.recv_ping()
 
     def send_ping(self):
         self._oprot.writeMessageBegin('ping', TMessageType.CALL, self._seqid)
@@ -63,7 +63,9 @@ class Client(Iface):
         result = ping_result()
         result.read(iprot)
         iprot.readMessageEnd()
-        return
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "ping failed: unknown result")
 
     def genRand(self):
         self.send_genRand()
@@ -153,7 +155,7 @@ class Processor(Iface, TProcessor):
         iprot.readMessageEnd()
         result = ping_result()
         try:
-            self._handler.ping()
+            result.success = self._handler.ping()
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -263,7 +265,15 @@ ping_args.thrift_spec = (
 
 
 class ping_result(object):
+    """
+    Attributes:
+     - success
 
+    """
+
+
+    def __init__(self, success=None,):
+        self.success = success
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -274,6 +284,11 @@ class ping_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 0:
+                if ftype == TType.BOOL:
+                    self.success = iprot.readBool()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -284,6 +299,10 @@ class ping_result(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('ping_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.BOOL, 0)
+            oprot.writeBool(self.success)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -302,6 +321,7 @@ class ping_result(object):
         return not (self == other)
 all_structs.append(ping_result)
 ping_result.thrift_spec = (
+    (0, TType.BOOL, 'success', None, None, ),  # 0
 )
 
 
@@ -508,13 +528,9 @@ class calculateStats_result(object):
             if ftype == TType.STOP:
                 break
             if fid == 0:
-                if ftype == TType.LIST:
-                    self.success = []
-                    (_etype17, _size14) = iprot.readListBegin()
-                    for _i18 in range(_size14):
-                        _elem19 = iprot.readDouble()
-                        self.success.append(_elem19)
-                    iprot.readListEnd()
+                if ftype == TType.STRUCT:
+                    self.success = StatsStruct()
+                    self.success.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -528,11 +544,8 @@ class calculateStats_result(object):
             return
         oprot.writeStructBegin('calculateStats_result')
         if self.success is not None:
-            oprot.writeFieldBegin('success', TType.LIST, 0)
-            oprot.writeListBegin(TType.DOUBLE, len(self.success))
-            for iter20 in self.success:
-                oprot.writeDouble(iter20)
-            oprot.writeListEnd()
+            oprot.writeFieldBegin('success', TType.STRUCT, 0)
+            self.success.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -552,7 +565,7 @@ class calculateStats_result(object):
         return not (self == other)
 all_structs.append(calculateStats_result)
 calculateStats_result.thrift_spec = (
-    (0, TType.LIST, 'success', (TType.DOUBLE, None, False), None, ),  # 0
+    (0, TType.STRUCT, 'success', [StatsStruct, None], None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs

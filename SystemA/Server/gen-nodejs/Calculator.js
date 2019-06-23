@@ -39,6 +39,12 @@ Calculator_ping_args.prototype.write = function(output) {
 };
 
 var Calculator_ping_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+  }
 };
 Calculator_ping_result.prototype = {};
 Calculator_ping_result.prototype.read = function(input) {
@@ -46,10 +52,24 @@ Calculator_ping_result.prototype.read = function(input) {
   while (true) {
     var ret = input.readFieldBegin();
     var ftype = ret.ftype;
+    var fid = ret.fid;
     if (ftype == Thrift.Type.STOP) {
       break;
     }
-    input.skip(ftype);
+    switch (fid) {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
     input.readFieldEnd();
   }
   input.readStructEnd();
@@ -58,6 +78,11 @@ Calculator_ping_result.prototype.read = function(input) {
 
 Calculator_ping_result.prototype.write = function(output) {
   output.writeStructBegin('Calculator_ping_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;
@@ -222,7 +247,7 @@ var Calculator_calculateStats_result = function(args) {
   this.success = null;
   if (args) {
     if (args.success !== undefined && args.success !== null) {
-      this.success = Thrift.copyList(args.success, [null]);
+      this.success = new ttypes.StatsStruct(args.success);
     }
   }
 };
@@ -238,16 +263,9 @@ Calculator_calculateStats_result.prototype.read = function(input) {
     }
     switch (fid) {
       case 0:
-      if (ftype == Thrift.Type.LIST) {
-        this.success = [];
-        var _rtmp311 = input.readListBegin();
-        var _size10 = _rtmp311.size || 0;
-        for (var _i12 = 0; _i12 < _size10; ++_i12) {
-          var elem13 = null;
-          elem13 = input.readDouble();
-          this.success.push(elem13);
-        }
-        input.readListEnd();
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new ttypes.StatsStruct();
+        this.success.read(input);
       } else {
         input.skip(ftype);
       }
@@ -267,15 +285,8 @@ Calculator_calculateStats_result.prototype.read = function(input) {
 Calculator_calculateStats_result.prototype.write = function(output) {
   output.writeStructBegin('Calculator_calculateStats_result');
   if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.LIST, 0);
-    output.writeListBegin(Thrift.Type.DOUBLE, this.success.length);
-    for (var iter14 in this.success) {
-      if (this.success.hasOwnProperty(iter14)) {
-        iter14 = this.success[iter14];
-        output.writeDouble(iter14);
-      }
-    }
-    output.writeListEnd();
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -343,7 +354,10 @@ CalculatorClient.prototype.recv_ping = function(input,mtype,rseqid) {
   result.read(input);
   input.readMessageEnd();
 
-  callback(null);
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('ping failed: unknown result');
 };
 
 CalculatorClient.prototype.genRand = function(callback) {

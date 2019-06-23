@@ -37,10 +37,10 @@ router.get('/actions', async (req, res) => {
                 result = await rpc.calculateStats(sanitize(entry));
                 if (result) {
                     res.status(200).send({
-                        "mean": result[0],
-                        "median": result[1],
-                        "variance": result[2],
-                        "std-dev": result[3]
+                        "mean": result.mean,
+                        "median": result.median,
+                        "variance": result.variance,
+                        "std-dev": result.std_dev
                     });
                 }
                 break;
