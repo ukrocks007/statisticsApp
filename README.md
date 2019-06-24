@@ -1,4 +1,4 @@
-# statisticsApp
+# Statistics-App
 A simple statistics demo using React, node, python &amp; Apache thrift
 
 ## How to run
@@ -7,7 +7,10 @@ A simple statistics demo using React, node, python &amp; Apache thrift
 
 As SystemB is using Python it need platform specific libraries of thrift
 
-[Apache thrift build](https://thrift.apache.org/tutorial/)
+[Apache thrift - Build and Install](https://thrift.apache.org/tutorial/)
+
+- Download thrift
+- Run ```./configure && make```
 
 You have to build thrift on the platform you are using and copy the contents of lib/py/build/ folder to SystemB/lib/py/build
 
